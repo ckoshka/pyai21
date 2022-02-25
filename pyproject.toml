@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "pyai21"
+version = "0.1.0"
+description = "An interpreter for imaginary Python code + wrapper for the AI21 API"
+authors = ["ckoshka"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+aiohttp = "3.8.1"
+loguru = "0.6.0"
+python-dotenv = "0.19.2"
+rapidfuzz = "2.0.1"
+ujson = "5.1.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
