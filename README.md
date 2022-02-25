@@ -36,7 +36,7 @@ Generally fictional Python code works much better than natural language, in addi
 # Usage
 
 ```bash
-pip install pyai21
+pip install git+https://github.com/ckoshka/pyai21
 ```
 
 You'll need to have a .env file in your current working directory with the following variables:
