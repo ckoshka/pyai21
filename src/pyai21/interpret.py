@@ -1,4 +1,4 @@
-from completions import get
+from .completions import get
 from typing import Callable, Union, List
 
 from textwrap import dedent

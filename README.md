@@ -3,6 +3,7 @@ This is a simple async Python wrapper for AI21's API. It also comes with a conve
 Example of @interpret in action:
 
 ```python
+from pyai21.interpret import interpret
 @interpret(stops=['"""'])
 async def answer_anything(question: str) -> str:
     return f"""
