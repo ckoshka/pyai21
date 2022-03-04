@@ -1,4 +1,4 @@
-from .completions import get
+from pyai21.completions import get
 from typing import Callable, Union, List
 
 from textwrap import dedent
