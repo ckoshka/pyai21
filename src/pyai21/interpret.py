@@ -19,7 +19,7 @@ def interpret(**kwargs_for_get) -> Callable:
         async def inner_wrapper(*args, **kwargs) -> Union[str, List[str]]:
             prompt = await func(*args, **kwargs)
             prompt = dedent(prompt) #type: ignore
-            return await get(prompt, **kwargs_for_get)
+            return await get(prompt=prompt, **kwargs_for_get)
         inner_wrapper.__doc__ = func.__doc__
         inner_wrapper.__annotations__ = func.__annotations__
         inner_wrapper.__name__ = func.__name__
