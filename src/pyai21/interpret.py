@@ -9,12 +9,8 @@ def interpret(**kwargs_for_get) -> Callable:
     def generate_pizza_name(culture: str) -> str:
         return f"""My favourite {culture} pizza is"""
     '''
-    if not kwargs_for_get.pop('temp', False):
-        kwargs_for_get['temp'] = 0.83
-    if not kwargs_for_get.pop('frequency_penalty', False):
-        kwargs_for_get['frequency_penalty'] = 0.2
-    if not kwargs_for_get.pop('stops', False):
-        kwargs_for_get['stops'] = ["\n"]
+    default_kwargs = {"temp": 0.83, "frequency_penalty": 0.2, "stops": ["\n"]}
+    default_kwargs.update(kwargs_for_get)
     def outer_wrapper(func: Callable) -> Callable:
         async def inner_wrapper(*args, **kwargs) -> Union[str, List[str]]:
             prompt = await func(*args, **kwargs)

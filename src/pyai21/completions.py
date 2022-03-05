@@ -1,5 +1,5 @@
 WHITESPACE_CHARACTER = "▁"
-from typing import Generator, List, Dict, Union, Tuple
+from typing import Generator, List, Dict, Optional, Union, Tuple
 import random
 import ujson
 import aiohttp
@@ -32,7 +32,7 @@ KEY_GENERATOR = get_api_key()
 
 async def get_ai21(
     prompt: str,
-    stops: list = None,
+    stops: Optional[list] = None,
     max: int = 100,
     temp: float = 0.85,
     top_p: float = 1.0,
@@ -41,9 +41,9 @@ async def get_ai21(
     presence_penalty: float = 0.0,
     count_penalty: float = 0.0,
     frequency_penalty: float = 0.0,
-    banned_tokens: List[str] = None,
+    banned_tokens: Optional[List[str]] = None,
     logit_biases: Dict[str, float] = dict(),
-    key: str = None,
+    key: Optional[str] = None,
 ) -> Union[str, List[str]]:
     '''Takes a prompt and returns a completed response by J1-Jumbo.
     :param prompt: The prompt to get the text of.
@@ -108,7 +108,7 @@ async def get_ai21(
 async def emit_ai21(
     prompt: str,
     size: str = "j1-jumbo",
-    key: str = None,
+    key: Optional[str] = None,
 ) -> List[Dict[str, Union[str, float]]]:
     '''Takes a prompt and returns a list of tokens along with their logprobs.
     :param prompt: The prompt to get the text of.
@@ -137,7 +137,7 @@ async def emit_ai21(
 
 async def get_pool(
     prompt: str,
-    stops: list = None,
+    stops: Optional[list] = None,
     max: int = 100,
     temp: float = 0.85,
     top_p: float = 1.0,
@@ -146,7 +146,7 @@ async def get_pool(
     presence_penalty: float = 0.0,
     count_penalty: float = 0.0,
     frequency_penalty: float = 0.0,
-    banned_tokens: List[str] = None,
+    banned_tokens: Optional[List[str]] = None,
     logit_biases: Dict[str, float] = dict(),
 ) -> Union[str, List[str]]:
     '''Takes a prompt and returns a completed response by J1-Jumbo.
