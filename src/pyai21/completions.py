@@ -257,3 +257,18 @@ async def match(
 #print(json.dumps(res, indent=2))
 #options = ["George", "Kelly", "Peter", "Trump", "Melissa", "David"]
 #print(match("Hello, my name is", 4, options))
+
+async def get_copilot(prompt: str, max: int = 100, temp: float = 0.2, top_p: float = 0.9) -> str:
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            "https://celeste.exposed:666",
+            json={
+                "prompt": prompt,
+                "max_tokens": max,
+                "temperature": temp,
+                "top_p": top_p
+            }
+        ) as resp:
+            logger.debug(f"Response received: {resp.content}")
+            json_response = await resp.json()
+        return json_response["output"]

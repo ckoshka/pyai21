@@ -5,7 +5,7 @@ description = "An interpreter for imaginary Python code + wrapper for the AI21 A
 authors = ["ckoshka"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 aiohttp = "3.8.1"
 loguru = "0.6.0"
 python-dotenv = "0.19.2"

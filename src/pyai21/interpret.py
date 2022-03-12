@@ -11,8 +11,8 @@ def regularise(inner_wrapper: Callable, func: Callable) -> Callable:
     inner_wrapper.__name__ = func.__name__
     return inner_wrapper
 
-
-def interpret(**kwargs_for_get) -> Callable:
+from rapidfuzz import cpp_fuzz, cpp_process
+def interpret(maximum_similarity: int = 100, **kwargs_for_get) -> Callable:
     '''This is a decorator that reads the return value, and formats it using its arguments like so:
 
     @interpret(**kwargs_for_get)
@@ -26,7 +26,12 @@ def interpret(**kwargs_for_get) -> Callable:
         async def inner_wrapper(*args, **kwargs) -> Union[str, List[str]]:
             prompt = await func(*args, **kwargs)
             prompt = dedent(prompt)  # type: ignore
-            return await get(prompt=prompt, **kwargs_for_get)
+            for _ in range(5):
+                res = await get(prompt=prompt, **kwargs_for_get)
+                if cpp_fuzz.partial_ratio(res, prompt) < maximum_similarity:
+                    return res
+            else:
+                raise RuntimeError("Could not find a generation that was sufficiently different from the prompt itself")
 
         return regularise(inner_wrapper, func)
 
@@ -34,8 +39,6 @@ def interpret(**kwargs_for_get) -> Callable:
 
 
 def multistep(**kwargs_for_get) -> Callable:
-    default_kwargs = {"temp": 0.83, "frequency_penalty": 0.2, "stops": ["\n"]}
-    default_kwargs.update(kwargs_for_get)
     """Example:
     hello my name is {[' ']} and my favourite color is {[' ', '.']}
     In this case, everything between the braces would be captured and parsed as a list of stops via ast's literal_eval."""
@@ -44,18 +47,24 @@ def multistep(**kwargs_for_get) -> Callable:
         async def inner_wrapper(*args, **kwargs) -> str:
             prompt = await func(*args, **kwargs)
             stop_rules: List[str] = re.findall(r"\{(.*?)\}", prompt)
+            logger.debug(f"stop_rules: {stop_rules}")
             stop_rules_lists: List[List[str]] = [
                 literal_eval(rule) for rule in stop_rules
             ]
             steps: List[str] = re.split(r"{[^}]*}", prompt)
+            logger.debug(f"steps: {steps}")
             dynamic_prompt = ""
             for step, rule in zip(steps, stop_rules_lists):
+                logger.debug(f"Step: {step}")
+                logger.debug(f"Rule: {rule}")
                 dynamic_prompt += step
                 result = await get(prompt=step, **kwargs_for_get, stops=rule)
+                logger.debug(f"Result: {result}")
                 if isinstance(result, str):
                     dynamic_prompt += result
                 else:
                     dynamic_prompt += result[0]
+                logger.debug(f"Dynamic prompt: {dynamic_prompt}")
             return dynamic_prompt
 
         return regularise(inner_wrapper, func)
