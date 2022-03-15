@@ -32,6 +32,48 @@ await name_generator(kwargs='nationality="Singaporean", script="Latin", rareness
     # "['Joh Jae Lin', 'James Yi Jin Hao', ..."
 ```
 
+```python
+from pyai21.interpret import generate
+
+@generate(separator="\n", stops=["\n"])
+def shopping_list_generator(diet: str = "vegan"):
+    return f"""Here is my 100-item {diet} shopping list:
+    1. Organic coconut flakes"""
+
+gen = shopping_list_generator(diet="vegetarian")
+new_item = await gen.send("2. Sunflower oil")
+# Returns "3. Whole wheat flower"
+new_item2 = await gen.send("4. Lots of love from grandma")
+# Returns "5. Goji berry mix"
+
+@generate(separator="\n", stops=["\n"])
+def conversation():
+    return f"""
+    Here is a transcript of a conversation I had with Santa:
+    Santa: Ho ho ho, and what present would you like for Christmas?"""
+
+gen = conversation(person="Santa")
+reply = await gen.send("Me: I wish for the death of my enemies and also for a fluffy cat")
+# You get the idea
+```
+
+```python
+from pyai21.interpret import multistep
+
+@multistep(temp=0.85)
+async def introduce_yourself():
+    return """Hello! My name is {[' ']} and my favourite color is {[' ', '.']}"""
+# {[' ']} means stop when you reach a space
+# {[' ', '.']} means stop when you reach a space or a full stop
+# Will return something like "Hello! My name is Jennifer and my favourite color is yellow"
+```
+
+```python
+from pyai21.completions import get_copilot
+await get_copilot(prompt="import requests\n", max=30)
+# Returns "import asyncio\nimport..."
+```
+
 Generally fictional Python code works much better than natural language, in addition to being more concise.
 
 # Usage
